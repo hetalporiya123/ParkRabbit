@@ -28,11 +28,6 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    @GetMapping("path")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {

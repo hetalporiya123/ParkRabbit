@@ -21,16 +21,16 @@ public class UserService {
 
     public String registerUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Error: Username is already taken!");
+            throw new RuntimeException("Username already exists");
         }
+
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Error: Email is already in use!");
+            throw new RuntimeException("Email already exists");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        // Generate and return the token
         return jwtUtils.generateToken(user.getUsername());
     }
 
