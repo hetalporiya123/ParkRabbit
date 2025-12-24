@@ -1,0 +1,82 @@
+[
+  {
+    "name": "In Der Au Parking",
+    "address": "In der Au 1, 70173 Stuttgart",
+    "latitude": 48.7756,
+    "longitude": 9.1715,
+    "hourlyRate": 2.00,
+    "totalSlots": 35
+  },
+  {
+    "name": "Stadtmitte Parking",
+    "address": "Königstraße 20, 70173 Stuttgart",
+    "latitude": 48.7784,
+    "longitude": 9.1794,
+    "hourlyRate": 3.00,
+    "totalSlots": 50
+  },
+  {
+    "name": "HFT Stuttgart Parking",
+    "address": "Schellingstraße 24, 70174 Stuttgart",
+    "latitude": 48.7819,
+    "longitude": 9.1707,
+    "hourlyRate": 1.50,
+    "totalSlots": 25
+  },
+  {
+    "name": "Schlossplatz Parking",
+    "address": "Schlossplatz 1, 70173 Stuttgart",
+    "latitude": 48.7785,
+    "longitude": 9.1799,
+    "hourlyRate": 2.50,
+    "totalSlots": 40
+  },
+  {
+    "name": "Hauptbahnhof Parking",
+    "address": "Arnulf-Klett-Platz 2, 70173 Stuttgart",
+    "latitude": 48.7830,
+    "longitude": 9.1810,
+    "hourlyRate": 3.50,
+    "totalSlots": 60
+  },
+  {
+    "name": "Feuersee Parking",
+    "address": "Silberburgstraße 55, 70176 Stuttgart",
+    "latitude": 48.7718,
+    "longitude": 9.1626,
+    "hourlyRate": 2.20,
+    "totalSlots": 30
+  },
+  {
+    "name": "Charlottenplatz Parking",
+    "address": "Charlottenplatz 1, 70182 Stuttgart",
+    "latitude": 48.7733,
+    "longitude": 9.1845,
+    "hourlyRate": 2.80,
+    "totalSlots": 45
+  },
+  {
+    "name": "Universität Stuttgart Parking",
+    "address": "Keplerstraße 7, 70174 Stuttgart",
+    "latitude": 48.7812,
+    "longitude": 9.1722,
+    "hourlyRate": 1.80,
+    "totalSlots": 40
+  },
+  {
+    "name": "Marienplatz Parking",
+    "address": "Marienplatz 1, 70178 Stuttgart",
+    "latitude": 48.7638,
+    "longitude": 9.1710,
+    "hourlyRate": 2.40,
+    "totalSlots": 30
+  },
+  {
+    "name": "Bohnenviertel Parking",
+    "address": "Rosenstraße 30, 70182 Stuttgart",
+    "latitude": 48.7742,
+    "longitude": 9.1871,
+    "hourlyRate": 2.60,
+    "totalSlots": 20
+  }
+]

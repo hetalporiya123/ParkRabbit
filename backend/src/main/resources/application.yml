@@ -3,7 +3,8 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,3 +13,6 @@ spring:
 rabbitmq:
   host: ${SPRING_RABBITMQ_HOST}
   port: ${SPRING_RABBITMQ_PORT}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 900000

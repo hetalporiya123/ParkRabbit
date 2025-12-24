@@ -1,5 +1,7 @@
 package com.parkrabbit.backend.dto;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -9,16 +11,21 @@ import lombok.Setter;
 @Setter
 public class ParkingLotCreateRequest {
 
-    @NotBlank(message = "parkingLotName is required")
-    private String parkingLotName;
+    @NotBlank(message = "name is required")
+    private String name;
 
-    @NotBlank(message = "status is required")
-    private String status;
+    @NotBlank(message = "address is required")
+    private String address;
 
     @NotNull(message = "latitude is required")
     private Double latitude;
-    
-    @NotNull(message = "Longitude is required")
+
+    @NotNull(message = "longitude is required")
     private Double longitude;
 
+    @NotNull(message = "hourlyRate is required")
+    private BigDecimal hourlyRate;
+
+    @NotNull(message = "totalSlots is required")
+    private Integer totalSlots;
 }

@@ -1,12 +1,14 @@
 package com.parkrabbit.backend.entity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "parking_lot")
 @Getter
 @Setter
 public class ParkingLot {
@@ -15,10 +17,38 @@ public class ParkingLot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String parkingLotName;
-    private String status;
-    private Double latitude;
-    private Double longitude;
+    @Column(nullable = false)
+    private String name;
 
-   
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
+    @Column(nullable = false)
+    private BigDecimal hourlyRate;
+
+    @Column(nullable = false)
+    private int totalSlots;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
