@@ -1,4 +1,4 @@
-# 🚗 Parking Management System (Event-Driven Architecture)
+# 🚗 Parking Management System (Event-Driven Architecture) - Ongoing Project
 
 A production-style **event-driven parking management system** built using **Spring Boot**, **React**, **RabbitMQ**, **PostgreSQL**, and **Docker**.
 
