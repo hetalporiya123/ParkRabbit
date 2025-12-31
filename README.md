@@ -4,6 +4,16 @@ A production-style **event-driven parking management system** built using **Spri
 
 This project demonstrates how backend services communicate **asynchronously** using a message broker to generate and manage notifications without direct frontend involvement.
 
+> 🚧 **Ongoing Project**
+> This repository is a fork of the original ParkRabbit project.
+> I am actively contributing to backend and infrastructure components.
+
+## My Contributions
+- Dockerized frontend, backend, PostgreSQL, and RabbitMQ services
+- Implemented reservation logic and scheduled reservation handling
+- Built RabbitMQ-based event publishing and consumption
+- Developed notification service logic
+
 ---
 
 ## 📌 Project Goal
