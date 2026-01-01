@@ -13,6 +13,10 @@ export default function LoginComponent() {
     }
   };
 
+  const handleRegister = ()=> {
+    navigate(`/signup`)
+  }
+
   const formConfig = {
   meta: {
     title: "LogIn",
@@ -45,12 +49,16 @@ export default function LoginComponent() {
       type: "submit",
       onSubmit: handleLogin
     },
+    subActions: {
+      show: true,
+      text: "Register",
+      variant: "contained",
+      type: "submit",
+      style: "primary cursor-pointer text-blue-600" ,
+      onClick: handleRegister
+    }
   },
 };
-
-
-
-
 
   return (
     <GenericFormComponent config = {formConfig} />
