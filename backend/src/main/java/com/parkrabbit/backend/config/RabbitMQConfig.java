@@ -11,12 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String EXCHANGE_NAME = "reservation.exchange";
+    public static final String PARKING_EXCHANGE = "parking.exchange";
 
     public static final String EXPIRED_QUEUE = "reservation.expired.queue";
     public static final String EXPIRED_ROUTING_KEY = "reservation.expired";
 
     public static final String SLOT_ASSIGNED_QUEUE = "slot.auto.assigned.queue";
     public static final String SLOT_ASSIGNED_ROUTING_KEY = "slot.auto.assigned";
+
+    public static final String PARKING_SESSION_STARTED_ROUTING_KEY = "parking.session.started";
+    public static final String PARKING_SESSION_ENDING_ROUTING_KEY = "parking.session.ending";
+
 
     @Bean
     public DirectExchange reservationExchange() {
@@ -42,12 +47,39 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue parkingSessionStartedQueue() {
+        return new Queue("parking.session.started.queue", true);
+    }
+
+    @Bean
+    public Queue parkingSessionEndingQueue() {
+        return new Queue("parking.session.ending.queue", true);
+    }
+
+    @Bean
     public Binding slotAssignedBinding() {
         return BindingBuilder
                 .bind(slotAutoAssignedQueue())
                 .to(reservationExchange())
                 .with(SLOT_ASSIGNED_ROUTING_KEY);
     }
+
+    @Bean
+    public Binding parkingSessionStartedBinding() {
+        return BindingBuilder
+                .bind(parkingSessionStartedQueue())
+                .to(reservationExchange())
+                .with(PARKING_SESSION_STARTED_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding parkingSessionEndingBinding() {
+        return BindingBuilder
+                .bind(parkingSessionEndingQueue())
+                .to(reservationExchange())
+                .with(PARKING_SESSION_ENDING_ROUTING_KEY);
+    }
+
 
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
@@ -62,5 +94,10 @@ public class RabbitMQConfig {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setMessageConverter(converter);
         return template;
+    }
+
+    @Bean
+    public TopicExchange parkingExchange() {
+        return new TopicExchange(PARKING_EXCHANGE);
     }
 }

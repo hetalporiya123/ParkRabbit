@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,17 +25,21 @@ public class ReservationExpiryScheduler {
     private final ParkingLotRepository parkingLotRepository;
     private final ReservationExpiredProducer expiredProducer;
     private final SlotAutoAssignedProducer slotAutoAssignedProducer;
+    private final ParkingSlotRepository slotRepository;
+
 
     public ReservationExpiryScheduler(
             ReservationRepository reservationRepository,
             ReservationQueueRepository queueRepository,
             ParkingLotRepository parkingLotRepository,
+            ParkingSlotRepository slotRepository, // ✅ ADD
             ReservationExpiredProducer expiredProducer,
             SlotAutoAssignedProducer slotAutoAssignedProducer
     ) {
         this.reservationRepository = reservationRepository;
         this.queueRepository = queueRepository;
         this.parkingLotRepository = parkingLotRepository;
+        this.slotRepository = slotRepository; // ✅ ADD
         this.expiredProducer = expiredProducer;
         this.slotAutoAssignedProducer = slotAutoAssignedProducer;
     }
@@ -50,13 +56,20 @@ public class ReservationExpiryScheduler {
 
         for (Reservation reservation : expiredReservations) {
 
+            // ✅ DO NOT EXPIRE CONFIRMED
+            if (reservation.isConfirmed()) {
+                continue;
+            }
+
+            // ✅ Mark expired + persist
             reservation.setStatus(ReservationStatus.EXPIRED);
+            reservationRepository.save(reservation);
 
             ParkingLot parkingLot =
                     parkingLotRepository.findById(reservation.getParkingLotId())
                             .orElseThrow();
 
-            // 🔔 Notify expired user
+            // 🔔 RabbitMQ: reservation expired
             expiredProducer.sendExpiredReservationEvent(
                     new ReservationExpiredEvent(
                             reservation.getId(),
@@ -77,6 +90,7 @@ public class ReservationExpiryScheduler {
                     );
 
             if (queueOpt.isPresent()) {
+
                 ReservationQueue queue = queueOpt.get();
 
                 Reservation newReservation = new Reservation();
@@ -88,11 +102,12 @@ public class ReservationExpiryScheduler {
                 newReservation.setStatus(ReservationStatus.ACTIVE);
 
                 slot.setStatus(ParkingSlotStatus.RESERVED);
+                slotRepository.save(slot);
 
                 reservationRepository.save(newReservation);
                 queueRepository.delete(queue);
 
-                // 🔔 Notify queued user
+                // 🔔 RabbitMQ: slot auto-assigned
                 slotAutoAssignedProducer.sendSlotAutoAssignedEvent(
                         new SlotAutoAssignedEvent(
                                 queue.getUser().getId(),
@@ -105,13 +120,11 @@ public class ReservationExpiryScheduler {
                         )
                 );
 
-                System.out.println(
-                        "Slot reassigned to queued user: " +
-                                queue.getUser().getUsername()
-                );
             } else {
                 slot.setStatus(ParkingSlotStatus.FREE);
+                slotRepository.save(slot);
             }
         }
     }
+
 }

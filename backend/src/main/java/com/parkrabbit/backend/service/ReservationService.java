@@ -102,4 +102,63 @@ public class ReservationService {
 
         return response;
     }
+
+    @Transactional
+    public void confirmReservation(Long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+
+        // ❌ EXPIRED
+        if (reservation.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Reservation expired");
+        }
+
+        // ❌ NO SLOT (QUEUED USER)
+        if (reservation.getParkingSlot() == null) {
+            throw new IllegalStateException("Queued reservation cannot be confirmed");
+        }
+
+        // ✅ prevent double confirm
+        if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
+            return;
+        }
+
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
+    }
+
+
+    @Transactional
+    public void assignSlotToNextQueuedUser(Long parkingLotId, ParkingSlot freeSlot) {
+
+        ReservationQueue nextInQueue =
+                queueRepository.findFirstByParkingLotIdOrderByQueuedAtAsc(parkingLotId)
+                        .orElse(null);
+
+        if (nextInQueue == null) {
+            // No queued users → slot remains FREE
+            return;
+        }
+
+        User user = nextInQueue.getUser();
+
+        // Assign slot
+        freeSlot.setStatus(ParkingSlotStatus.RESERVED);
+        slotRepository.save(freeSlot);
+
+        Reservation reservation = new Reservation();
+        reservation.setUserId(user.getId());
+        reservation.setParkingLotId(parkingLotId);
+        reservation.setParkingSlot(freeSlot);
+        reservation.setReservedAt(LocalDateTime.now());
+        reservation.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+        reservation.setStatus(ReservationStatus.ACTIVE);
+
+        reservationRepository.save(reservation);
+
+        // Remove user from queue
+        queueRepository.delete(nextInQueue);
+    }
+
 }
