@@ -87,7 +87,7 @@ public class ParkingSessionService {
         slotRepository.save(slot);
 
         LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = start.plusHours(1);
+        LocalDateTime end = start.plusMinutes(2);
 
         ParkingSession session = new ParkingSession();
         session.setUserId(reservation.getUserId());
@@ -123,7 +123,7 @@ public class ParkingSessionService {
                                 "Your parking session will end at " + end
                         )
                 ),
-                end.minusMinutes(10)
+                end.minusMinutes(1)
                         .atZone(ZoneId.systemDefault())
                         .toInstant()
         );

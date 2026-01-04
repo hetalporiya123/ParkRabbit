@@ -6,6 +6,7 @@ import { parkingLots, reserveParkingSlot } from "../api/parkingLots.js";
 import { useEffect, useState } from "react";
 import { formatTime } from "../services/dateTime.service.js";
 import { getUserReservation } from "../api/reservations.js";
+import { startParkingSession } from "../api/parkingSession.js";
 export default function ParkingComponent() {
   const [parking, setParking] = useState([]);
   const { addNotification } = useNotifications();
@@ -72,6 +73,16 @@ export default function ParkingComponent() {
     }
   };
   
+  const handlStartParkingSession = async(reservationId)=>{
+    try{
+      const response = await startParkingSession(reservationId);
+      // setSession(response.type);
+    }catch(err){
+      console.error("handleStartParkingSession: ",err)
+    }
+  }
+
+
   useEffect(() => {
     handleGetUserReservation();
   }, []);
@@ -89,9 +100,11 @@ export default function ParkingComponent() {
               reservation?.reservedAt
             )} Expires at • ${formatTime(reservation?.expiresAt)} `}
             animationData={parkingReserved}
+            onButtonClick={()=>handlStartParkingSession(reservation.reservationId)}
+            buttonText="Start Session"
           />
         </div>
-      );
+      );  
     }
     // 2️ Queued state
     if (queued) {

@@ -4,6 +4,5 @@ export const parkingLots = async ()=>{
     return httpClient.get("/api/parking-lots")
 }
 export const reserveParkingSlot = async (parkingLotId)=>{
-    console.log("parkingId: ", parkingLotId)
     return httpClient.post("/api/reservations",{"parkingLotId": parkingLotId})
 }
