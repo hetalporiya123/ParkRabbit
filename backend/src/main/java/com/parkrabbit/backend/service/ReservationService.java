@@ -103,6 +103,39 @@ public class ReservationService {
         return response;
     }
 
+    @Transactional(readOnly = true)
+    public ReservationResponseDto getActiveReservationForUser(Long userId) {
+
+        return reservationRepository
+                .findByUserIdAndStatus(userId, ReservationStatus.ACTIVE)
+                .map(reservation -> {
+
+                    ParkingLot lot = parkingLotRepository
+                            .findById(reservation.getParkingLotId())
+                            .orElseThrow();
+
+                    ReservationResponseDto dto = new ReservationResponseDto();
+                    dto.setReservationId(reservation.getId());
+                    dto.setSlotId(reservation.getParkingSlot().getId());
+                    dto.setParkingLotId(lot.getId());
+                    dto.setParkingLotName(lot.getName());
+                    dto.setParkingLotAddress(lot.getAddress());
+                    dto.setReservedAt(reservation.getReservedAt());
+                    dto.setExpiresAt(reservation.getExpiresAt());
+                    dto.setQueued(false);
+                    dto.setMessage("Active reservation found");
+
+                    return dto;
+                })
+                .orElseGet(() -> {
+                    ReservationResponseDto dto = new ReservationResponseDto();
+                    dto.setQueued(false);
+                    dto.setMessage("No active reservation");
+                    return dto;
+                });
+    }
+
+
     @Transactional
     public void confirmReservation(Long reservationId) {
 
