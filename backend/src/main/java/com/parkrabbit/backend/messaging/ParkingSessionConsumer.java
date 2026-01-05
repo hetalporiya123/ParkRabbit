@@ -25,14 +25,14 @@ public class ParkingSessionConsumer {
 
     @RabbitListener(queues = "parking.session.started.queue")
     public void handleStarted(ParkingSessionStartedEvent event) {
-
+        
         UserNotification notification = new UserNotification();
         notification.setUserId(event.getUserId());
         notification.setType("SESSION_STARTED");
         notification.setMessage("Parking session started");
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
-
+        System.out.println("🔥 RECEIVED SESSION_STARTED EVENT");
         UserNotification saved = notificationRepository.save(notification);
         socketHandler.sendToUser(event.getUserId(), saved);
     }
@@ -46,7 +46,7 @@ public class ParkingSessionConsumer {
         notification.setMessage("Parking session ending soon");
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
-
+        System.out.println("🔥 RECEIVED SESSION_ENDING EVENT");
         UserNotification saved = notificationRepository.save(notification);
         socketHandler.sendToUser(event.getUserId(), saved);
     }
@@ -60,12 +60,12 @@ public class ParkingSessionConsumer {
         notification.setMessage("Parking session ended");
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
-
+        System.out.println("🔥 RECEIVED SESSION_ENDED EVENT");
         UserNotification saved = notificationRepository.save(notification);
         socketHandler.sendToUser(event.getUserId(), saved);
     }
 
-   // 🔒 KEEPING THIS EXACTLY AS REQUESTED
+
 @RabbitListener(queues = "user.notification.queue")
 public void handleUserNotification(UserNotificationEvent event) {
 
@@ -74,7 +74,7 @@ public void handleUserNotification(UserNotificationEvent event) {
                     + event.getUserId() + " : " + event.getMessage()
     );
 
-    // ✅ Persist notification
+
     UserNotification notification = new UserNotification();
     notification.setUserId(event.getUserId());
     notification.setType(event.getType());
@@ -84,7 +84,6 @@ public void handleUserNotification(UserNotificationEvent event) {
 
     UserNotification saved = notificationRepository.save(notification);
 
-    // 🌐 WebSocket → frontend (send persisted version)
     socketHandler.sendToUser(event.getUserId(), saved);
 }
 

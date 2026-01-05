@@ -4,9 +4,9 @@ import parkingReserved from "../assets/parkingReserved.json";
 import { useNotifications } from "../notifications/useNotifications";
 import { parkingLots, reserveParkingSlot } from "../api/parkingLots.js";
 import { useEffect, useState } from "react";
-import { formatTime } from "../services/dateTime.service.js";
 import { getUserReservation } from "../api/reservations.js";
 import { startParkingSession } from "../api/parkingSession.js";
+import { formatCreatedAt } from "../services/dateTime.service.js";
 export default function ParkingComponent() {
   const [parking, setParking] = useState([]);
   const { addNotification } = useNotifications();
@@ -38,12 +38,9 @@ export default function ParkingComponent() {
       addNotification({
         type: "success",
         title: "Reservation Confirmed",
-        message: `Slot ${response.slotId} reserved until ${formatTime(
-          response.expiresAt
-        )}`,
+        message: `Slot no. ${response.slotId} reserved successfully at ${response.parkingLotName} with reservation number ${response.reservationId} and expires at`,
       });
       }      
-      console.log("handleCreateReservation: ", response)
      
     } catch (error) {
       console.log(error);
@@ -75,7 +72,7 @@ export default function ParkingComponent() {
   
   const handlStartParkingSession = async(reservationId)=>{
     try{
-      const response = await startParkingSession(reservationId);
+      await startParkingSession(reservationId);
       // setSession(response.type);
     }catch(err){
       console.error("handleStartParkingSession: ",err)
@@ -96,9 +93,9 @@ export default function ParkingComponent() {
             title={`${reservation?.parkingLotAddress} Parking Lot ${reservation?.parkingLotId}`}
             description={`Parking Slot No. • ${
               reservation?.slotId
-            } Reserved at • ${formatTime(
+            } Reserved at • ${formatCreatedAt(
               reservation?.reservedAt
-            )} Expires at • ${formatTime(reservation?.expiresAt)} `}
+            )} Expires at • ${formatCreatedAt(reservation?.expiresAt)} `}
             animationData={parkingReserved}
             onButtonClick={()=>handlStartParkingSession(reservation.reservationId)}
             buttonText="Start Session"

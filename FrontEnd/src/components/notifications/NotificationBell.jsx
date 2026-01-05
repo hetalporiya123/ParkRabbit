@@ -9,12 +9,22 @@ import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import { useNotifications } from "../../notifications/useNotifications";
+import { updateNotificationStatus } from "../../api/notifications";
 
 export default function NotificationBell() {
   // 🔹 local UI state (belongs here)
   const [anchorEl, setAnchorEl] = useState(null);
   const openBell = Boolean(anchorEl);
+  const handleNotificationClick = async (n) => {
+    if (n.read) return;
 
+    try {
+      await updateNotificationStatus(n.id);
+      markAsRead(n.id);
+    } catch (err) {
+      console.error("Failed to update notification", err);
+    }
+  };
   // 🔹 global notification state
   const { notifications, markAsRead } = useNotifications();
 
@@ -32,7 +42,7 @@ export default function NotificationBell() {
 
   return (
     <>
-      {/* 🔔 Bell button */}
+      {/*  Bell button */}
       <IconButton color="inherit" onClick={handleBellClick}>
         <Badge
           badgeContent={unreadCount}
@@ -43,7 +53,7 @@ export default function NotificationBell() {
         </Badge>
       </IconButton>
 
-      {/* 📋 Dropdown */}
+      {/*  Dropdown */}
       <Menu
         anchorEl={anchorEl}
         open={openBell}
@@ -60,7 +70,7 @@ export default function NotificationBell() {
           <MenuItem
             key={n.id}
             onClick={() => {
-              markAsRead(n.id);
+              handleNotificationClick(n)
               handleBellClose();
             }}
             sx={{

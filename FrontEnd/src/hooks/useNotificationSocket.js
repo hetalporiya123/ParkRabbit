@@ -3,9 +3,6 @@ import { createNotification } from "../notifications/models/notification.model";
 import { useNotifications } from "../notifications/useNotifications";
 import { useNavigate } from "react-router";
 export function useNotificationSocket(userId) {
-  console.log("SOCKET CHECKING: ", userId);
-  console.log("SOCKET CHECKING URL: ", import.meta.env.VITE_API_WEB_SOCKET);
-
   const socketRef = useRef(null);
   const { addNotification } = useNotifications();
   const navigate = useNavigate();
@@ -30,63 +27,86 @@ export function useNotificationSocket(userId) {
           // show expired notification
           addNotification(
             createNotification({
-              type: "warning",
-              title: "Reservation Expired",
-              message: `${data.parkingLotName} reservation expired`,
+              id: data.id,
+              userId: data.userId,
+              type: data.type,
+              message: data.message,
+              read: data.read ?? false,
+              createdAt: data.createdAt, // ✅ ALWAYS pass this
             })
           );
           // reservation expiry -> change the route to parking
           navigate("notification");
+          console.log("🔔 Notification received", data);
+
           break;
 
         case "SLOT_ASSIGNED":
           // show slot assigned
           addNotification(
             createNotification({
-              type: "success",
-              title: "Slot Assigned",
-              message: `Slot assigned at ${data.parkingLotName}`,
+              id: data.id,
+              userId: data.userId,
+              type: data.type,
+              message: data.message,
+              read: data.read ?? false,
+              createdAt: data.createdAt, // ✅ ALWAYS pass this
             })
           );
+          console.log("🔔 Notification received", data);
+
           break;
 
         case "SESSION_STARTED":
           // show session started
-          console.log("session: ", data.type)
+          console.log("session: ", data.type);
           addNotification(
             createNotification({
-              type: "success",
-              title: "Session Started",
-              message: `Your Parking session has started at ${data.parkingLotName} on slotNumber ${data.slotId}`,
+              id: data.id,
+              userId: data.userId,
+              type: data.type,
+              message: data.message,
+              read: data.read ?? false,
+              createdAt: data.createdAt, // ✅ ALWAYS pass this
             })
           );
+          console.log("🔔 Notification received", data);
+
           navigate("notification");
           break;
 
         case "SESSION_REMINDER":
           // reminder UI
-          console.log("session: ", data.type)
+          console.log("session: ", data.type);
           addNotification(
             createNotification({
-              type: "success",
-              title: "Session Reminder",
-              message: `Your Parking session is going to expire at ${data.parkingLotName} on slotNumber ${data.slotId}`,
+              id: data.id,
+              userId: data.userId,
+              type: data.type,
+              message: data.message,
+              read: data.read ?? false,
+              createdAt: data.createdAt, // ✅ ALWAYS pass this
             })
           );
+          console.log("🔔 Notification received", data);
+
           navigate("notification");
           break;
 
         case "SESSION_ENDED":
           addNotification(
             createNotification({
-              type: "success",
-              title: "Session Ended",
-              message: `Your Parking Session Ended at ${data.parkingLotName} on slotNumber ${data.slotId}`,
+              id: data.id,
+              userId: data.userId,
+              type: data.type,
+              message: data.message,
+              read: data.read ?? false,
+              createdAt: data.createdAt, // ✅ ALWAYS pass this
             })
           );
+          console.log("🔔 Notification received", data);
+
           navigate("notification");
-          // session ended UI
-          console.log("session: ", data.type)
           break;
       }
 

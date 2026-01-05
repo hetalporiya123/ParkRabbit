@@ -1,5 +1,5 @@
 import { useNotifications } from "./NotificationContext";
-
+import { formatCreatedAt } from "../services/dateTime.service";
 export default function NotificationList() {
   const { notifications, markAsRead } = useNotifications();
 
@@ -12,13 +12,16 @@ export default function NotificationList() {
       {notifications.map((n) => (
         <div
           key={n.id}
-          className={`p-2 rounded mb-2 cursor-pointer ${
-            n.read ? "bg-gray-100" : "bg-blue-50"
+          className={`p-2 rounded mb-2 ${
+            n.read ? "bg-gray-100" : "bg-blue-50 cursor-pointer"
           }`}
-          onClick={() => markAsRead(n.id)}
+          onClick={() => !n.read && markAsRead(n.id)}
         >
-          <div className="font-medium">{n.title}</div>
+          <div className="font-medium">{n.type}</div>
           <div className="text-sm text-gray-600">{n.message}</div>
+          <div className="text-xs text-gray-400 mt-1">
+            {formatCreatedAt(n.createdAt)}
+          </div>
         </div>
       ))}
     </div>

@@ -1,3 +1,4 @@
+import { updateNotificationStatus } from "../api/notifications";
 import { useNotifications } from "../notifications/useNotifications";
 import {
   Card,
@@ -6,9 +7,23 @@ import {
   Box,
   Chip,
 } from "@mui/material";
+import { formatCreatedAt } from "../services/dateTime.service";
 
 export default function NotificationComponent() {
+  
   const { notifications, markAsRead } = useNotifications();
+const handleNotificationClick = async (n) => {
+  if (n.read) return;
+
+  try {
+    const id= n.id
+    await updateNotificationStatus(id); // backend
+    console.log(n)
+    markAsRead(n.id);                     // frontend
+  } catch (err) {
+    console.error("Failed to update notification", err);
+  }
+};
 
   if (notifications.length === 0) {
     return (
@@ -26,7 +41,7 @@ export default function NotificationComponent() {
           sx={{
             backgroundColor: n.read ? "inherit" : "rgba(25,118,210,0.08)",
           }}
-          onClick={() => markAsRead(n.id)}
+          onClick={() => handleNotificationClick(n)}
         >
           <CardContent>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -43,7 +58,7 @@ export default function NotificationComponent() {
             </Typography>
 
             <Typography variant="caption" color="text.secondary">
-              {new Date(n.timestamp).toLocaleString()}
+              {formatCreatedAt(n.createdAt)}
             </Typography>
           </CardContent>
         </Card>

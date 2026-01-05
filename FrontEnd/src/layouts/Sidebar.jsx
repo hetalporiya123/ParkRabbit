@@ -28,6 +28,10 @@ import NotificationBell from "../components/notifications/NotificationBell";
 const drawerWidth = 240;
 import { jwtDecode } from "jwt-decode";
 import { useNotificationSocket } from "../hooks/useNotificationSocket";
+import { getAllNotifications } from "../api/notifications";
+import { useNotifications } from "../notifications/useNotifications";
+import { createNotification } from "../notifications/models/notification.model";
+import { useEffect } from "react";
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -109,10 +113,31 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Sidebar() {
   const token = localStorage.getItem("token");
-  const {userId}= jwtDecode(token)
-  console.log("SIDEBAR jwt checking: ", jwtDecode(token), userId)
+  const { userId } = jwtDecode(token);
+  const { addNotification } = useNotifications();
+  useEffect(() => {
+    const handleGetAllUserNotifications = async () => {
+      const response = await getAllNotifications();
+      console.log(response);
+      response.map((notification) => {
+        addNotification(
+          createNotification({
+            id: notification.id,
+            userId: notification.userId,
+            type: notification.type,
+            message: notification.message,
+            read: notification.read ?? false,
+            createdAt: notification.createdAt,
+          })
+        );
+      });
+    };
+
+    handleGetAllUserNotifications();
+  }, []);
+
   //------Calling the userNotificationSocket after login success at top level
-  useNotificationSocket(userId)
+  useNotificationSocket(userId);
   //-------------------------------------------
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
