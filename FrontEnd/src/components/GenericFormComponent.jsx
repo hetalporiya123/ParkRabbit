@@ -54,6 +54,7 @@ export default function GenericFormComponent({config}){
 
           {/* Submit Button */}
           {config.actions.submit.show && (
+            <>
             <button
               type={config.actions.type}
               className="w-full rounded-xl bg-black py-3 text-white
@@ -62,7 +63,16 @@ export default function GenericFormComponent({config}){
             >
               {config.actions.submit.text}
             </button>
-          )}
+            {config.actions?.subActions?.show &&(
+               <p>Don't have a ParkRabbit account? <button 
+                type={config.actions.subActions.type} 
+                className={config.actions.subActions.style}
+                onClick={config.actions.subActions.onClick}
+                >
+                {config.actions.subActions.text}</button></p>
+            )}
+          </>
+        )}
         </form>
       </div>
     </div>

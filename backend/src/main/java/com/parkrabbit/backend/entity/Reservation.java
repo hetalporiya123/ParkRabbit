@@ -30,6 +30,9 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
+    @Column(nullable = false)
+    private boolean confirmed = false;
+
     // ---------- Getters & Setters ----------
 
     public Long getId() {
@@ -87,4 +90,15 @@ public class Reservation {
     public void setStatus(ReservationStatus status) {
         this.status = status;
     }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+
+
 }
