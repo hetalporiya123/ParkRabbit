@@ -13,7 +13,7 @@ This project demonstrates how backend services communicate **asynchronously** us
 - Dockerized frontend, backend, PostgreSQL, and RabbitMQ services
 - Implemented reservation logic and scheduled reservation handling
 - Built RabbitMQ-based event publishing and consumption
-- Developed notification service logic
+- Developed notification service  logic for reservation and parking session
 
 ---
 
