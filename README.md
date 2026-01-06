@@ -1,4 +1,4 @@
-# Topic: 1. **Event-driven notification system** – Services communicate via RabbitMQ/NATS/Kafka to send notifications based on user actions.
+# Topic: 1. **Event-driven notification system** – Services communicate via RabbitMQ to send notifications based on user actions.
 # 🚗 Parking Management System (Event-Driven Architecture)
 
 A production-style **event-driven parking management system** built using **Spring Boot**, **React**, **RabbitMQ**, **PostgreSQL**, and **Docker**.
